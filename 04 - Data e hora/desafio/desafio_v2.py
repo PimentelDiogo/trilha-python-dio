@@ -27,10 +27,12 @@ class ContasIterador:
 
 
 class Cliente:
+    __slots__ = ('endereco', 'contas', '_indice_conta')
+
     def __init__(self, endereco):
         self.endereco = endereco
         self.contas = []
-        self.indice_conta = 0
+        self._indice_conta = 0
 
     def realizar_transacao(self, conta, transacao):
         if len(conta.historico.transacoes_do_dia()) >= 2:
@@ -191,12 +193,12 @@ class Historico:
 
 class Transacao(ABC):
     @property
-    @abstractproperty
     def valor(self):
-        pass
+        return self._valor
 
-    @abstractclassmethod
+    @abstractmethod
     def registrar(self, conta):
+        """Registra a transa o no hist rico da conta"""
         pass
 
 
@@ -390,30 +392,20 @@ def main():
 
         if opcao == "d":
             depositar(clientes)
-
         elif opcao == "s":
             sacar(clientes)
-
         elif opcao == "e":
             exibir_extrato(clientes)
-
         elif opcao == "nu":
             criar_cliente(clientes)
-
         elif opcao == "nc":
-            numero_conta = len(contas) + 1
-            criar_conta(numero_conta, clientes, contas)
-
+            contas.append(ContaCorrente.nova_conta(clientes[-1], len(contas) + 1, 500, 50))
         elif opcao == "lc":
             listar_contas(contas)
-
         elif opcao == "q":
             break
-
         else:
-            print(
-                "\n@@@ Operação inválida, por favor selecione novamente a operação desejada. @@@"
-            )
+            print("\n@@@ Operação inválida, tente novamente. @@@")
 
 
 main()
